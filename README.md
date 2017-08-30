@@ -20,7 +20,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+First of all you will need to create an instance of the GetResponse Client with it's api-key:
+```ruby
+client = GetResponseApi::Client.new('CLIENT API KEY')
+```
+After this you can call the (API)[https://apidocs.getresponse.com/v3] methods through it.
+For example:
+```ruby
+client.account
+# This method will return the client account hash if it succeds and a error message otherwise
+```
 
 ## Development
 
