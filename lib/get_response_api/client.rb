@@ -5,18 +5,11 @@ module GetResponseApi
     end
 
     def account
-      response = @connection.get('/accounts').parsed_response
-
-      if error?(response) && response['message']
-        return response['message']
-      end
-      response
+      @connection.request(:get, '/accounts')
     end
 
-    private
-
-    def error?(response)
-      response['httpStatus']
+    def campaigns
+      @connection.request(:get, '/campaigns')
     end
   end
 end
