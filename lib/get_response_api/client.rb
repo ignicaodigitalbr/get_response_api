@@ -11,5 +11,9 @@ module GetResponseApi
     def campaigns
       @connection.request(:get, '/campaigns')
     end
+
+    def custom_fields
+      @connection.request(:get, '/custom-fields')
+    end
   end
 end

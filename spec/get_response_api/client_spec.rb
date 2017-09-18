@@ -85,4 +85,43 @@ RSpec.describe GetResponseApi::Client do
       it { is_expected.to eq(error_message) }
     end
   end
+
+  describe '#custom_fields' do
+    before do
+      WebMock.stub_request(:get, "#{url}/custom-fields")
+             .to_return(body: response, headers: header)
+    end
+
+    context 'when the request is valid' do
+      let(:result) do
+        [{
+          "customFieldId"=>"CEmpQ",
+          "name"=>"age",
+          "values"=>["18-29", "30-44", "45-59", "60+", "<18"]
+        }]
+      end
+      let(:response) { result.to_json }
+
+      subject { client.custom_fields }
+
+      it { is_expected.to eq(result) }
+    end
+
+    context 'when the request is invalid' do
+      let(:error_message) do
+        'Unable to authenticate request. ' \
+        'Check credentials or authentication method details'
+      end
+      let(:response) do
+        {
+          'httpStatus' => 401,
+          'message' => error_message
+        }.to_json
+      end
+
+      subject { client.custom_fields }
+
+      it { is_expected.to eq(error_message) }
+    end
+  end
 end
