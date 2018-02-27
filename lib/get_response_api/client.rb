@@ -8,8 +8,8 @@ module GetResponseApi
       @connection.request(:get, '/accounts')
     end
 
-    def campaigns
-      @connection.request(:get, '/campaigns')
+    def campaigns(page: 1, per_page: 250)
+      @connection.request(:get, "/campaigns?page=#{page}&perPage=#{per_page}")
     end
 
     def custom_fields
