@@ -20,12 +20,11 @@ module GetResponseApi
 
     private
 
-    def http_request(request, path, body: {}, headers: {})
+    def http_request(request, path, headers: {})
       headers.merge!(auth)
       HTTParty.public_send(
         request,
         "#{API_ENDPOINT}#{path}",
-        body: body.to_json,
         headers: headers,
         timeout: TIMEOUT
       )

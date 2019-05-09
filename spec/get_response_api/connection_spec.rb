@@ -7,7 +7,6 @@ RSpec.describe GetResponseApi::Connection do
   describe '#request' do
     let(:url) { 'https://api.getresponse.com/v3' }
     let(:path) { '/accounts' }
-    let(:body) { {} }
     let(:header) do
       {
         'X-Auth-Token' => "api-key #{apikey}",
@@ -26,7 +25,7 @@ RSpec.describe GetResponseApi::Connection do
 
       it 'should call post with valid params' do
         expect(HTTParty).to have_received(:get)
-          .with("#{url}#{path}", body: body.to_json, headers: header, timeout: 7)
+          .with("#{url}#{path}", headers: header, timeout: 7)
       end
     end
 
@@ -39,7 +38,7 @@ RSpec.describe GetResponseApi::Connection do
 
       it 'should call post with valid params' do
         expect(HTTParty).to have_received(:post)
-          .with("#{url}#{path}", body: body.to_json, headers: header, timeout: 7)
+          .with("#{url}#{path}", headers: header, timeout: 7)
       end
     end
 
