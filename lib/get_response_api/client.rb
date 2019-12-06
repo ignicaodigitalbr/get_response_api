@@ -4,16 +4,33 @@ module GetResponseApi
       @connection = Connection.new(api_key)
     end
 
-    def account
-      @connection.request(:get, '/accounts')
+    def ping
+      # checks the status of the GetResponse badge as a simple method of testing the connection
+      @connection.get('accounts/badge')
     end
 
-    def campaigns(page: 1, per_page: 250)
-      @connection.request(:get, "/campaigns?page=#{page}&perPage=#{per_page}")
+    def accounts
+      @connection.get('accounts')
+    end
+
+    def campaigns(page: 1, per_page: 100)
+      @connection.get("campaigns?page=#{page}&perPage=#{per_page}")
+    end
+
+    def contacts(page: 1, per_page: 100)
+      @connection.get("contacts?page=#{page}&perPage=#{per_page}")
+    end
+
+    def create_new_contact(contact_details)
+      @connection.post('contacts', contact_details)
+    end
+
+    def move_contact(contact_id, campaign_id)
+      @connection.post("contacts/#{contact_id}", {'campaign' => {'campaignId': campaign_id}})
     end
 
     def custom_fields
-      @connection.request(:get, '/custom-fields')
+      @connection.get('custom-fields')
     end
   end
 end
