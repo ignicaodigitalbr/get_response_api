@@ -25,8 +25,15 @@ module GetResponseApi
     def request(method, path, headers: {})
       response = http_request(method, path, headers).parsed_response
 
-      if error?(response) && response['message']
-        return response['message']
+      if error?(response)
+        if response['message']
+          raise GetResponseError.new(response['message'])
+        else
+          raise GetResponseError.new('Request validation error') if response['httpStatus'].to_i == 400
+          raise GetResponseError.new('Authentication error') if response['httpStatus'].to_i == 401
+          raise GetResponseError.new('The throttling limit has been reached') if response['httpStatus'].to_i == 429
+          raise GetResponseError.new('Unknown GetResponse v3 API error')
+        end
       end
 
       response
