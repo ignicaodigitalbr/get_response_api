@@ -1,6 +1,6 @@
-# GetResponseApi
+# GetResponse API
 
-This is a simple wrapper for the GetResponse API.
+This is a simple wrapper for the GetResponse v3 API.
 
 ## Installation
 
@@ -20,15 +20,15 @@ Or install it yourself as:
 
 ## Usage
 
-First of all you will need to create an instance of the GetResponse Client with it's api-key:
+First of all you will need to create an instance of the GetResponse client with an api key:
 ```ruby
-client = GetResponseApi::Client.new('CLIENT API KEY')
+client = GetResponseApi::Client.new('CLIENT_API_KEY')
 ```
-After this you can call the (API)[https://apidocs.getresponse.com/v3] methods through it.
+After this you can call the [API methods](https://apidocs.getresponse.com/v3) through it.
 For example:
 ```ruby
-client.account
 # This method will return the client account hash if it succeds and a error message otherwise
+client.account
 ```
 
 ## Development
@@ -47,4 +47,4 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 ## Code of Conduct
 
-Everyone interacting in the GetResponseApi project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ignicaodigitalbr/get_response_api/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the `get_response_api` project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [Code of Conduct](https://github.com/ignicaodigitalbr/get_response_api/blob/master/CODE_OF_CONDUCT.md).
