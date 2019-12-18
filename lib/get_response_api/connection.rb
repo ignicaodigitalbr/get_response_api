@@ -11,20 +11,55 @@ module GetResponseApi
     end
 
     def get(path)
-      request(:get, path)
+      url = api_url(path)
+
+      response = HTTParty.get(url, options).parsed_response
+      handle_errors(response)
+
+      response
     end
 
-    def post(path, headers)
-      request(:post, path, headers)
+    def post(path, body_data)
+      url = api_url(path)
+      post_options = { body: body_data }
+      post_options.merge!(options)
+
+      response = HTTParty.post(url, post_options).parsed_response
+      handle_errors(response)
+
+      response
     end
 
     def delete(path)
-      request(:delete, path)
+      url = api_url(path)
+
+      response = HTTParty.delete(url, options).parsed_response
+      handle_errors(response)
+
+      response
     end
 
-    def request(method, path, headers: {})
-      response = http_request(method, path, headers).parsed_response
+    private
 
+    def api_url(path)
+      "#{API_ENDPOINT}#{path}"
+    end
+
+    def options
+      {
+        headers: headers,
+        timeout: TIMEOUT,
+      }
+    end
+
+    def headers
+      {
+        'X-Auth-Token' => "api-key #{@api_key}",
+        'Content-Type' => 'application/json',
+      }
+    end
+
+    def handle_errors(response)
       if error?(response)
         if response['message']
           raise GetResponseError.new(response['message'])
@@ -35,33 +70,11 @@ module GetResponseApi
           raise GetResponseError.new('Unknown GetResponse v3 API error')
         end
       end
-
-      response
-    end
-
-    private
-
-    def http_request(request, path, headers: {})
-      headers.merge!(auth)
-
-      HTTParty.public_send(
-        request,
-        "#{API_ENDPOINT}#{path}",
-        headers: headers,
-        timeout: TIMEOUT
-      )
-    end
-
-    def auth
-      {
-        'X-Auth-Token' => "api-key #{@api_key}",
-        'Content-Type' => 'application/json'
-      }
     end
 
     def error?(response)
       # GetResponse doesn't return an http status for successful responses (e.g. 200)
-      response.is_a?(Hash) && response['httpStatus']
+      response && response.is_a?(Hash) && response['httpStatus']
     end
 
   end
