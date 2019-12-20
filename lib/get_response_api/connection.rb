@@ -16,18 +16,18 @@ module GetResponseApi
       response = HTTParty.get(url, options).parsed_response
       handle_errors(response)
 
-      response
+      response['data']
     end
 
     def post(path, body_data)
       url = api_url(path)
-      post_options = { body: body_data }
+      post_options = { :body => [ body_data ].to_json }
       post_options.merge!(options)
 
       response = HTTParty.post(url, post_options).parsed_response
       handle_errors(response)
 
-      response
+      response['data']
     end
 
     def delete(path)
@@ -36,7 +36,7 @@ module GetResponseApi
       response = HTTParty.delete(url, options).parsed_response
       handle_errors(response)
 
-      response
+      response['data']
     end
 
     private
@@ -47,15 +47,12 @@ module GetResponseApi
 
     def options
       {
-        headers: headers,
-        timeout: TIMEOUT,
-      }
-    end
-
-    def headers
-      {
-        'X-Auth-Token' => "api-key #{@api_key}",
-        'Content-Type' => 'application/json',
+        :headers => {
+          'X-Auth-Token' => "api-key #{@api_key}",
+          'Content-Type' => 'application/json',
+          'Accept'       => 'application/json',
+        },
+        :timeout => TIMEOUT,
       }
     end
 
