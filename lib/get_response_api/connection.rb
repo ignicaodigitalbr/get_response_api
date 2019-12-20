@@ -21,7 +21,7 @@ module GetResponseApi
 
     def post(path, body_data)
       url = api_url(path)
-      post_options = { :body => [ body_data ].to_json }
+      post_options = { body: body_data.to_json }
       post_options.merge!(options)
 
       response = HTTParty.post(url, post_options).parsed_response
@@ -47,12 +47,12 @@ module GetResponseApi
 
     def options
       {
-        :headers => {
+        headers: {
           'X-Auth-Token' => "api-key #{@api_key}",
           'Content-Type' => 'application/json',
-          'Accept'       => 'application/json',
+          'Accept'       => 'application/json'
         },
-        :timeout => TIMEOUT,
+        timeout: TIMEOUT
       }
     end
 
