@@ -13,18 +13,16 @@ module GetResponseApi
     def get(path)
       url = api_url(path)
 
-      response = HTTParty.get(url, options).parsed_response
+      response = HTTParty.get(url, :headers => headers, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
       response['data']
     end
 
-    def post(path, body_data)
+    def post(path, body)
       url = api_url(path)
-      post_options = { body: body_data.to_json }
-      post_options.merge!(options)
 
-      response = HTTParty.post(url, post_options).parsed_response
+      response = HTTParty.post(url, :body => body.to_json, :headers => headers, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
       response['data']
@@ -33,7 +31,7 @@ module GetResponseApi
     def delete(path)
       url = api_url(path)
 
-      response = HTTParty.delete(url, options).parsed_response
+      response = HTTParty.delete(url, :headers => headers, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
       response['data']
@@ -45,14 +43,11 @@ module GetResponseApi
       "#{API_ENDPOINT}#{path}"
     end
 
-    def options
+    def headers
       {
-        headers: {
-          'X-Auth-Token' => "api-key #{@api_key}",
-          'Content-Type' => 'application/json',
-          'Accept'       => 'application/json'
-        },
-        timeout: TIMEOUT
+        'X-Auth-Token' => "api-key #{@api_key}",
+        'Content-Type' => 'application/json',
+        'Accept'       => 'application/json'
       }
     end
 
