@@ -16,7 +16,7 @@ module GetResponseApi
       response = HTTParty.get(url, :headers => headers, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
-      response['data']
+      response
     end
 
     def post(path, body)
@@ -25,7 +25,7 @@ module GetResponseApi
       response = HTTParty.post(url, :body => body.to_json, :headers => headers, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
-      response['data']
+      response
     end
 
     def delete(path)
@@ -34,7 +34,7 @@ module GetResponseApi
       response = HTTParty.delete(url, :headers => headers, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
-      response['data']
+      response
     end
 
     private
