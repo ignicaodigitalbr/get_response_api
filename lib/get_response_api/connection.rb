@@ -11,7 +11,7 @@ module GetResponseApi
     def initialize(api_key)
       @api_key = api_key
       setup_headers
-      setup_proxy if use_proxy?
+      setup_proxy
     end
 
     def get(path)
@@ -76,14 +76,12 @@ module GetResponseApi
     def setup_proxy
       proxy_uri = URI.parse(ENV.fetch('HTTP_PROXY'))
       self.class.http_proxy(proxy_uri.host, proxy_uri.port)
+    rescue KeyError => e
+      return
     end
 
     def setup_headers
       self.class.headers(headers)
-    end
-
-    def use_proxy?
-      !ENV.fetch('HTTP_PROXY', nil).nil?
     end
 
   end
