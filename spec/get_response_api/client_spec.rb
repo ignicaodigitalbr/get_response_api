@@ -50,7 +50,7 @@ RSpec.describe GetResponseApi::Client do
       end
 
       it 'raises an error' do
-        expect { client.account }.to raise_error
+        expect { client.account }.to raise_error(GetResponseApi::GetResponseError)
       end
     end
   end
@@ -92,7 +92,7 @@ RSpec.describe GetResponseApi::Client do
       end
 
       it 'raises an error' do
-        expect { client.campaigns }.to raise_error
+        expect { client.campaigns }.to raise_error(GetResponseApi::GetResponseError)
       end
     end
   end
@@ -133,7 +133,7 @@ RSpec.describe GetResponseApi::Client do
       end
 
       it 'raises an error' do
-        expect { client.account }.to raise_error
+        expect { client.custom_fields }.to raise_error(GetResponseApi::GetResponseError)
       end
     end
 

@@ -71,6 +71,22 @@ RSpec.describe GetResponseApi::Connection do
     end
   end
 
+  describe '#delete' do
+    let(:path) { '/contacts/1' }
+    before do
+      allow(response).to receive(:parsed_response).and_return({})
+      allow(described_class).to receive(:delete).and_return(response)
+      described_class.new(api_key).delete(path)
+    end
+
+    it 'should call DELETE with valid params' do
+      expect(described_class).to have_received(:delete)
+        .with("#{url}#{path}", timeout: timeout)
+
+      expect(described_class.headers).to eql(headers)
+    end
+  end
+
   describe 'when response is a success' do
     let(:success) { {'id' => 'ok'} }
 
