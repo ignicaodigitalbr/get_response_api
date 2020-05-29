@@ -3,17 +3,21 @@ require 'httparty'
 module GetResponseApi
   class Connection
 
+    include HTTParty
+
     API_ENDPOINT = 'https://api.getresponse.com/v3/'.freeze
     TIMEOUT = 7
 
     def initialize(api_key)
       @api_key = api_key
+      setup_headers
+      setup_proxy if use_proxy?
     end
 
     def get(path)
       url = api_url(path)
 
-      response = HTTParty.get(url, :headers => headers, :timeout => TIMEOUT).parsed_response
+      response = self.class.get(url, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
       response
@@ -22,7 +26,7 @@ module GetResponseApi
     def post(path, body)
       url = api_url(path)
 
-      response = HTTParty.post(url, :body => body.to_json, :headers => headers, :timeout => TIMEOUT).parsed_response
+      response = self.class.post(url, :body => body.to_json, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
       response
@@ -31,7 +35,7 @@ module GetResponseApi
     def delete(path)
       url = api_url(path)
 
-      response = HTTParty.delete(url, :headers => headers, :timeout => TIMEOUT).parsed_response
+      response = self.class.delete(url, :timeout => TIMEOUT).parsed_response
       handle_errors(response)
 
       response
@@ -67,6 +71,19 @@ module GetResponseApi
     def error?(response)
       # GetResponse doesn't return an http status for successful responses (e.g. 200)
       response && response.is_a?(Hash) && response['httpStatus']
+    end
+
+    def setup_proxy
+      proxy_uri = URI.parse(ENV.fetch('HTTP_PROXY'))
+      self.class.http_proxy(proxy_uri.host, proxy_uri.port)
+    end
+
+    def setup_headers
+      self.class.headers(headers)
+    end
+
+    def use_proxy?
+      !ENV.fetch('HTTP_PROXY', nil).nil?
     end
 
   end
