@@ -9,7 +9,7 @@ module GetResponseApi
       @connection.get('accounts/badge')
     end
 
-    def accounts
+    def account
       @connection.get('accounts')
     end
 

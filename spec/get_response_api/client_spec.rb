@@ -2,14 +2,21 @@ require 'spec_helper'
 require 'webmock/rspec'
 
 RSpec.describe GetResponseApi::Client do
-  let(:header) { {'Content-Type' => 'application/json'} }
+  let(:api_key) { '1236547hjuh' }
+  let(:headers) do
+    {
+      'Content-Type' => 'application/json',
+      'X-Auth-Token' => "api-key #{api_key}",
+      'Accept'       => 'application/json'
+    }
+  end
   let(:url)  { 'https://api.getresponse.com/v3/' }
-  let(:client) { described_class.new('1236547hjuh') }
+  let(:client) { described_class.new(api_key) }
 
   describe '#account' do
     before do
       WebMock.stub_request(:get, "#{url}accounts")
-             .to_return(body: response, headers: header)
+             .to_return(body: response, headers: headers)
     end
 
     context 'when the request is valid' do
@@ -42,16 +49,16 @@ RSpec.describe GetResponseApi::Client do
         }.to_json
       end
 
-      subject { client.account }
-
-      it { is_expected.to eq(error_message) }
+      it 'raises an error' do
+        expect { client.account }.to raise_error(GetResponseApi::GetResponseError)
+      end
     end
   end
 
   describe '#campaigns' do
     before do
-      WebMock.stub_request(:get, "#{url}campaigns")
-             .to_return(body: response, headers: header)
+      WebMock.stub_request(:get, "#{url}campaigns?page=1&perPage=100")
+             .to_return(body: response, headers: headers)
     end
 
     context 'when the request is valid' do
@@ -84,16 +91,16 @@ RSpec.describe GetResponseApi::Client do
         }.to_json
       end
 
-      subject { client.campaigns }
-
-      it { is_expected.to eq(error_message) }
+      it 'raises an error' do
+        expect { client.campaigns }.to raise_error(GetResponseApi::GetResponseError)
+      end
     end
   end
 
   describe '#custom_fields' do
     before do
       WebMock.stub_request(:get, "#{url}custom-fields")
-             .to_return(body: response, headers: header)
+             .to_return(body: response, headers: headers)
     end
 
     context 'when the request is valid' do
@@ -125,9 +132,9 @@ RSpec.describe GetResponseApi::Client do
         }.to_json
       end
 
-      subject { client.custom_fields }
-
-      it { is_expected.to eq(error_message) }
+      it 'raises an error' do
+        expect { client.custom_fields }.to raise_error(GetResponseApi::GetResponseError)
+      end
     end
 
   end
