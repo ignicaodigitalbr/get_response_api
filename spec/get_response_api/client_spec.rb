@@ -97,6 +97,67 @@ RSpec.describe GetResponseApi::Client do
     end
   end
 
+  describe '#campaign' do
+    let(:campaign_id) { 'B' }
+
+    before do
+      WebMock.stub_request(:get, "#{url}campaigns/#{campaign_id}")
+             .to_return(body: response, headers: headers)
+    end
+
+    context 'when the request is valid' do
+      let(:result) do
+        [{
+          'campaignId'  => 'B',
+          'name'        => 'TestCampaigns',
+          'description' => 'New test campaign',
+          'isDefault'   => 'true',
+        }]
+      end
+
+      let(:response) { result.to_json }
+
+      subject { client.campaign(campaign_id) }
+
+      it { is_expected.to eq(result) }
+    end
+
+    context 'when the request is invalid' do
+      let(:error_message) do
+        'Unable to authenticate request. ' \
+        'Check credentials or authentication method details'
+      end
+
+      let(:response) do
+        {
+          'httpStatus' => 401,
+          'message' => error_message
+        }.to_json
+      end
+
+      it 'raises an error' do
+        expect { client.campaign(campaign_id) }.to raise_error(GetResponseApi::GetResponseError)
+      end
+    end
+
+    context 'when the campaign is invalid' do
+      let(:error_message) do
+        "Resource of type: campaign not found by: #{campaign_id}"
+      end
+
+      let(:response) do
+        {
+          'httpStatus' => 404,
+          'message' => error_message
+        }.to_json
+      end
+
+      it 'raises an error' do
+        expect { client.campaign(campaign_id) }.to raise_error(GetResponseApi::GetResponseError)
+      end
+    end
+  end
+
   describe '#custom_fields' do
     before do
       WebMock.stub_request(:get, "#{url}custom-fields")

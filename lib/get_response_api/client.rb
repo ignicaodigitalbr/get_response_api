@@ -17,6 +17,10 @@ module GetResponseApi
       @connection.get("campaigns?page=#{page}&perPage=#{per_page}")
     end
 
+    def campaign(campaign_id)
+      @connection.get("campaigns/#{campaign_id}")
+    end
+
     def contacts(page: 1, per_page: 100)
       @connection.get("contacts?page=#{page}&perPage=#{per_page}")
     end
